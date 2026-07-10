@@ -40,7 +40,11 @@
   .countdown-sub { color: var(--text-secondary); font-size: 12px; margin-top: 2px; }
 
   .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.25rem; }
-  .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem 1.25rem; }
+  .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem 1.25rem; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s; position: relative; }
+  .metric-card:hover { border-color: var(--border-strong); box-shadow: 0 2px 8px rgba(0,0,0,0.06); transform: translateY(-1px); }
+  .metric-card.metric-active { border-color: var(--wvi-orange); box-shadow: 0 0 0 1px var(--wvi-orange); }
+  .metric-card::after { content: '↓ View tasks'; position: absolute; bottom: 8px; right: 12px; font-size: 9px; color: var(--text-tertiary); opacity: 0; transition: opacity 0.15s; letter-spacing: 0.03em; }
+  .metric-card:hover::after { opacity: 1; }
   .metric-label { font-size: 11px; font-weight: 500; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
   .metric-value { font-size: 28px; font-weight: 600; line-height: 1; margin-bottom: 8px; }
   .metric-sub { font-size: 11px; color: var(--text-tertiary); }
@@ -207,86 +211,86 @@
     <div id="timeline"></div>
   </div>
 
-  <div class="footer">World Vision Development Foundation Inc · FY2026 Period 9 · Jun–Jul 2026 (corrected dates)</div>
+  <div class="footer">World Vision Development Foundation Inc · FY2026 Period 9 · Jun–Jul 2026</div>
 </div>
 
 <script>
 const tasks = [
-  {status:'Not yet started',name:'Last day to send billing invoice for bank debit',owner:'All Finance',wd:-4,due:'Jun 25',dueDate:'2026-06-25',day:'Thursday',cut:'3PM',comment:''},
-  {status:'Not yet started',name:'Pre-run of Aging Report',owner:'SSC',wd:-3,due:'Jun 26',dueDate:'2026-06-26',day:'Friday',cut:'5PM',comment:''},
-  {status:'Not yet started',name:'Transaction Listing for Critical Grants / Priority Collection',owner:'All Finance',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'SA related Payroll Entries',owner:'Payroll',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Charging Confirmation: Direct Charges (excl. EU/BMZ)',owner:'All Finance',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Charging Confirmation: Payroll (excl. EU/BMZ)',owner:'All Finance',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Charging Confirmation: Mobile Allowance',owner:'All Finance',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Charging Confirmation: Insurance (excl. EU/BMZ)',owner:'All Finance',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Recording of Conversion Rate (FT) & GC Funding',owner:'GL',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'11AM',comment:''},
-  {status:'Not yet started',name:'Review accuracy and completeness of Codings & Revaluation',owner:'GL',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'12NN',comment:''},
-  {status:'Not yet started',name:'Exchange Rate Calculation',owner:'SSC',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'1PM',comment:''},
-  {status:'Not yet started',name:'Inform final rate to NO; NO to confirm',owner:'SSC',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'2PM',comment:''},
-  {status:'Not yet started',name:'Update Exchange Rate in SunSystems',owner:'SSC',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'3PM',comment:''},
-  {status:'Not yet started',name:'Ledger Revaluation (LER)',owner:'SSC',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'4PM',comment:''},
-  {status:'Not yet started',name:'Start Account Allocation',owner:'SSC',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Invoice review for Koica Project',owner:'All Finance',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Extract grant profile from Horizon',owner:'RD Finance',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Confirmation of grant profile from Program Finance',owner:'Program Finance',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Budget entries (Ledger K/J/B/G) — submit approved entries',owner:'All Finance',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'Budget Upload',comment:''},
-  {status:'Not yet started',name:'Check split billing; send to NO for confirmation',owner:'SSC',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'10AM',comment:''},
-  {status:'Not yet started',name:'Send initial accrual entry to PHLO for review',owner:'SSC',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'12NN',comment:''},
-  {status:'Not yet started',name:'NO to confirm split billing correct codings',owner:'All Finance',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Charging Confirmation: Payroll (EU/BMZ only)',owner:'All Finance',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'10AM',comment:''},
-  {status:'Not yet started',name:'Charging Confirmation: Direct Charges (EU/BMZ only)',owner:'All Finance',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'10AM',comment:''},
-  {status:'Not yet started',name:'Charging Confirmation: Insurance (EU/BMZ only)',owner:'All Finance',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'10AM',comment:''},
-  {status:'Not yet started',name:'Accrual Confirmation from PHLO',owner:'All Finance',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'11AM',comment:''},
-  {status:'Not yet started',name:'Send accrual entry with integration error',owner:'SSC',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'4PM',comment:''},
-  {status:'Not yet started',name:'Accrual Confirmation and integration error correction',owner:'All Finance',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Check & Clear 59098 Account (before DPC CAL)',owner:'SSC',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Posting of Accrual Entry',owner:'SSC',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'11AM',comment:''},
-  {status:'Not yet started',name:'Update list of Excluded Projects for DPC CAL on MS Teams',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'12NN',comment:''},
-  {status:'Not yet started',name:'Monthly Budget Accounts Recon (LedB vs Actual vs PBAS)',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Occupancy',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Building Loan',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Settlement Advice',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Life Insurance',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Health Insurance',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'National Travel Insurance',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Payroll Entries',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Direct Charges',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'N2101 Support Cost Reclass to Various Projects Clearing',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'59501 Account For Clearing',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Other After Reval Entries',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'CVT Codes review — DPC CAL expenses',owner:'GL',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Clean-up of TP Eval Flow through / IPF Clean Up',owner:'Program Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Before DPC CAL Adjustments (R2R)',owner:'SSC',wd:4,due:'Jul 6',dueDate:'2026-07-06',day:'Monday',cut:'12NN',comment:''},
-  {status:'Not yet started',name:'Send Control Figure to WV Central for DPC CAL Run',owner:'GL',wd:4,due:'Jul 6',dueDate:'2026-07-06',day:'Monday',cut:'1PM',comment:''},
-  {status:'Not yet started',name:'DPC CAL Run',owner:'FRSC',wd:4,due:'Jul 6',dueDate:'2026-07-06',day:'Monday',cut:'2PM',comment:''},
-  {status:'Not yet started',name:'CAL Reclass & Support Cost (before CAL)',owner:'All Finance',wd:5,due:'Jul 7',dueDate:'2026-07-07',day:'Tuesday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Final Budget Entries (Ledger B/G/K/J)',owner:'All Finance',wd:5,due:'Jul 7',dueDate:'2026-07-07',day:'Tuesday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Send Control Figure to WV Central for CAL Run',owner:'GL',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'10AM',comment:''},
-  {status:'Not yet started',name:'Cost Allocation (CAL) Run',owner:'FRSC',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'5PM',comment:''},
-  {status:'Not yet started',name:'RD Entries (1xxx–3xxx & 5xxx related accounts)',owner:'All Finance',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Last day of Non-CAL related entries (NFA, Balance Sheet)',owner:'All Finance',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Last day of Account Allocation',owner:'SSC',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Reclass of Cash Voucher Transfer Income',owner:'All Finance',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'SCR Entries ONLY (after CAL)',owner:'All Finance',wd:7,due:'Jul 9',dueDate:'2026-07-09',day:'Thursday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Generate Financial Reports & Send to NO',owner:'SSC',wd:8,due:'Jul 10',dueDate:'2026-07-10',day:'Friday',cut:'1PM',comment:''},
-  {status:'Not yet started',name:'Review Financial Reports by NO',owner:'GL',wd:8,due:'Jul 10',dueDate:'2026-07-10',day:'Friday',cut:'4PM',comment:''},
-  {status:'Not yet started',name:'Posting Reports to FFR Database',owner:'SSC',wd:8,due:'Jul 10',dueDate:'2026-07-10',day:'Friday',cut:'5PM',comment:''},
-  {status:'Not yet started',name:'Power BI Financial Report',owner:'SFO/FMs',wd:9,due:'Jul 13',dueDate:'2026-07-13',day:'Monday',cut:'4PM',comment:''},
-  {status:'Not yet started',name:'PNSG Health Tracker',owner:'SFO/FMs',wd:9,due:'Jul 13',dueDate:'2026-07-13',day:'Monday',cut:'5PM',comment:''},
-  {status:'Not yet started',name:'Request CCLR re-run',owner:'SFO/FMs',wd:9,due:'Jul 13',dueDate:'2026-07-13',day:'Monday',cut:'5PM',comment:''},
-  {status:'Not yet started',name:'Operations Financial Highlights & Discussions',owner:'SFO/FMs',wd:9,due:'Jul 13',dueDate:'2026-07-13',day:'Monday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'LDR Compliance report email to OMs & Directors',owner:'Payroll',wd:9,due:'Jul 13',dueDate:'2026-07-13',day:'Monday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Finalization of Cover Memo',owner:'SFO/FMs',wd:11,due:'Jul 15',dueDate:'2026-07-15',day:'Tuesday',cut:'3PM',comment:''},
-  {status:'Not yet started',name:'FFR Discussion with ND',owner:'FD & ND',wd:12,due:'Jul 16',dueDate:'2026-07-16',day:'Wednesday',cut:'11AM',comment:''},
-  {status:'Not yet started',name:'Sending of Monthly Account Listing Ledger A & E',owner:'GL',wd:13,due:'Jul 17',dueDate:'2026-07-17',day:'Thursday',cut:'6PM',comment:''},
-  {status:'Not yet started',name:'Fixed Asset Recon',owner:'GL',wd:16,due:'Jul 22',dueDate:'2026-07-22',day:'Wednesday',cut:'Quarterly',comment:''},
+  {status:'Completed',name:'Last day to send billing invoice for bank debit',owner:'All Finance',wd:-4,due:'Jun 25',dueDate:'2026-06-25',day:'Thursday',cut:'3PM',comment:''},
+  {status:'Completed',name:'Pre-run of Aging Report',owner:'SSC',wd:-3,due:'Jun 26',dueDate:'2026-06-26',day:'Friday',cut:'5PM',comment:''},
+  {status:'Completed',name:'Transaction Listing for Critical Grants / Priority Collection',owner:'All Finance',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
+  {status:'Completed',name:'SA related Payroll Entries',owner:'Payroll',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Charging Confirmation: Direct Charges (excl. EU/BMZ)',owner:'All Finance',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Charging Confirmation: Payroll (excl. EU/BMZ)',owner:'All Finance',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Charging Confirmation: Mobile Allowance',owner:'All Finance',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Charging Confirmation: Insurance (excl. EU/BMZ)',owner:'All Finance',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Recording of Conversion Rate (FT) & GC Funding',owner:'GL',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'11AM',comment:''},
+  {status:'Completed',name:'Review accuracy and completeness of Codings & Revaluation',owner:'GL',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'12NN',comment:''},
+  {status:'Completed',name:'Exchange Rate Calculation',owner:'SSC',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'1PM',comment:''},
+  {status:'Completed',name:'Inform final rate to NO; NO to confirm',owner:'SSC',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'2PM',comment:''},
+  {status:'Completed',name:'Update Exchange Rate in SunSystems',owner:'SSC',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'3PM',comment:''},
+  {status:'Completed',name:'Ledger Revaluation (LER)',owner:'SSC',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'4PM',comment:''},
+  {status:'Completed',name:'Start Account Allocation',owner:'SSC',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Invoice review for Koica Project',owner:'All Finance',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Extract grant profile from Horizon',owner:'RD Finance',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Confirmation of grant profile from Program Finance',owner:'Program Finance',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Budget entries (Ledger K/J/B/G) — submit approved entries',owner:'All Finance',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'Budget Upload',comment:''},
+  {status:'Completed',name:'Check split billing; send to NO for confirmation',owner:'SSC',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'10AM',comment:''},
+  {status:'Completed',name:'Send initial accrual entry to PHLO for review',owner:'SSC',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'12NN',comment:''},
+  {status:'Completed',name:'NO to confirm split billing correct codings',owner:'All Finance',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Charging Confirmation: Payroll (EU/BMZ only)',owner:'All Finance',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'10AM',comment:''},
+  {status:'Completed',name:'Charging Confirmation: Direct Charges (EU/BMZ only)',owner:'All Finance',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'10AM',comment:''},
+  {status:'Completed',name:'Charging Confirmation: Insurance (EU/BMZ only)',owner:'All Finance',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'10AM',comment:''},
+  {status:'Completed',name:'Accrual Confirmation from PHLO',owner:'All Finance',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'11AM',comment:''},
+  {status:'Completed',name:'Send accrual entry with integration error',owner:'SSC',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'4PM',comment:''},
+  {status:'Completed',name:'Accrual Confirmation and integration error correction',owner:'All Finance',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Check & Clear 59098 Account (before DPC CAL)',owner:'SSC',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Posting of Accrual Entry',owner:'SSC',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'11AM',comment:''},
+  {status:'Completed',name:'Update list of Excluded Projects for DPC CAL on MS Teams',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'12NN',comment:''},
+  {status:'Completed',name:'Monthly Budget Accounts Recon (LedB vs Actual vs PBAS)',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Occupancy',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Building Loan',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Settlement Advice',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Life Insurance',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Health Insurance',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'National Travel Insurance',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Payroll Entries',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Direct Charges',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'N2101 Support Cost Reclass to Various Projects Clearing',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'59501 Account For Clearing',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Other After Reval Entries',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'CVT Codes review — DPC CAL expenses',owner:'GL',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Clean-up of TP Eval Flow through / IPF Clean Up',owner:'Program Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Before DPC CAL Adjustments (R2R)',owner:'SSC',wd:4,due:'Jul 6',dueDate:'2026-07-06',day:'Monday',cut:'12NN',comment:''},
+  {status:'Completed',name:'Send Control Figure to WV Central for DPC CAL Run',owner:'GL',wd:4,due:'Jul 6',dueDate:'2026-07-06',day:'Monday',cut:'1PM',comment:''},
+  {status:'Completed',name:'DPC CAL Run',owner:'FRSC',wd:4,due:'Jul 6',dueDate:'2026-07-06',day:'Monday',cut:'2PM',comment:''},
+  {status:'Completed',name:'CAL Reclass & Support Cost (before CAL)',owner:'All Finance',wd:5,due:'Jul 7',dueDate:'2026-07-07',day:'Tuesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Final Budget Entries (Ledger B/G/K/J)',owner:'All Finance',wd:5,due:'Jul 7',dueDate:'2026-07-07',day:'Tuesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Send Control Figure to WV Central for CAL Run',owner:'GL',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'10AM',comment:''},
+  {status:'Completed',name:'Cost Allocation (CAL) Run',owner:'FRSC',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'5PM',comment:''},
+  {status:'Completed',name:'RD Entries (1xxx–3xxx & 5xxx related accounts)',owner:'All Finance',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Last day of Non-CAL related entries (NFA, Balance Sheet)',owner:'All Finance',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Last day of Account Allocation',owner:'SSC',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Reclass of Cash Voucher Transfer Income',owner:'All Finance',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'SCR Entries ONLY (after CAL)',owner:'All Finance',wd:7,due:'Jul 9',dueDate:'2026-07-09',day:'Thursday',cut:'6PM',comment:''},
+  {status:'In progress',name:'Generate Financial Reports & Send to NO',owner:'SSC',wd:8,due:'Jul 10',dueDate:'2026-07-10',day:'Friday',cut:'1PM',comment:''},
+  {status:'In progress',name:'Review Financial Reports by NO',owner:'GL',wd:8,due:'Jul 10',dueDate:'2026-07-10',day:'Friday',cut:'4PM',comment:''},
+  {status:'In progress',name:'Posting Reports to FFR Database',owner:'SSC',wd:8,due:'Jul 10',dueDate:'2026-07-10',day:'Friday',cut:'5PM',comment:''},
+  {status:'Not yet started',name:'Power BI Financial Report',owner:'SFO/FMs',wd:9,due:'Jul 14',dueDate:'2026-07-14',day:'Monday',cut:'4PM',comment:''},
+  {status:'Not yet started',name:'PNSG Health Tracker',owner:'SFO/FMs',wd:9,due:'Jul 14',dueDate:'2026-07-14',day:'Monday',cut:'5PM',comment:''},
+  {status:'Not yet started',name:'Request CCLR re-run',owner:'SFO/FMs',wd:9,due:'Jul 14',dueDate:'2026-07-14',day:'Monday',cut:'5PM',comment:''},
+  {status:'Not yet started',name:'Operations Financial Highlights & Discussions',owner:'SFO/FMs',wd:9,due:'Jul 14',dueDate:'2026-07-14',day:'Monday',cut:'6PM',comment:''},
+  {status:'Not yet started',name:'LDR Compliance report email to OMs & Directors',owner:'Payroll',wd:9,due:'Jul 14',dueDate:'2026-07-14',day:'Monday',cut:'6PM',comment:''},
+  {status:'Not yet started',name:'Finalization of Cover Memo',owner:'SFO/FMs',wd:11,due:'Jul 16',dueDate:'2026-07-16',day:'Wednesday',cut:'3PM',comment:''},
+  {status:'Not yet started',name:'FFR Discussion with ND',owner:'FD & ND',wd:12,due:'Jul 17',dueDate:'2026-07-17',day:'Thursday',cut:'11AM',comment:''},
+  {status:'Not yet started',name:'Sending of Monthly Account Listing Ledger A & E',owner:'GL',wd:13,due:'Jul 18',dueDate:'2026-07-18',day:'Friday',cut:'6PM',comment:''},
+  {status:'Not yet started',name:'Fixed Asset Recon',owner:'GL',wd:16,due:'Jul 23',dueDate:'2026-07-23',day:'Wednesday',cut:'Quarterly',comment:''},
   {status:'Not yet started',name:'Combined CoreProj Logframe Report',owner:'SSC',wd:0,due:'—',dueDate:'',day:'—',cut:'Semi-Annually',comment:''},
   {status:'Not yet started',name:'ICSAT',owner:'GL',wd:0,due:'—',dueDate:'',day:'—',cut:'Every 2 Yrs',comment:''},
-  {status:'Not yet started',name:'Send Outstanding 200 Account Listing',owner:'GL',wd:19,due:'Jul 25',dueDate:'2026-07-25',day:'Friday',cut:'5PM',comment:''},
-  {status:'Not yet started',name:'Send updated 170-172 Account Monitoring Summary',owner:'GL',wd:19,due:'Jul 25',dueDate:'2026-07-25',day:'Friday',cut:'5PM',comment:''},
-  {status:'Not yet started',name:'Send 230 Accrual Balance to date to NO Finance',owner:'GL',wd:19,due:'Jul 25',dueDate:'2026-07-25',day:'Friday',cut:'5PM',comment:''},
-  {status:'Not yet started',name:'Preparation & Posting Statutory Entries',owner:'SSC',wd:19,due:'Jul 25',dueDate:'2026-07-25',day:'Friday',cut:'5PM',comment:''},
+  {status:'Not yet started',name:'Send Outstanding 200 Account Listing',owner:'GL',wd:19,due:'Jul 24',dueDate:'2026-07-24',day:'Thursday',cut:'5PM',comment:''},
+  {status:'Not yet started',name:'Send updated 170-172 Account Monitoring Summary',owner:'GL',wd:19,due:'Jul 24',dueDate:'2026-07-24',day:'Thursday',cut:'5PM',comment:''},
+  {status:'Not yet started',name:'Send 230 Accrual Balance to date to NO Finance',owner:'GL',wd:19,due:'Jul 24',dueDate:'2026-07-24',day:'Thursday',cut:'5PM',comment:''},
+  {status:'Not yet started',name:'Preparation & Posting Statutory Entries',owner:'GL',wd:19,due:'Jul 24',dueDate:'2026-07-24',day:'Thursday',cut:'5PM',comment:''},
 ];
 
 const today = new Date(); today.setHours(0,0,0,0);
@@ -335,10 +339,10 @@ const total=tasks.filter(t=>t.status!=='holiday').length,done=tasks.filter(t=>t.
 const inProg=tasks.filter(t=>t.status==='In progress').length,pending=tasks.filter(t=>t.status==='Not yet started').length;
 const pct=Math.round(done/total*100);
 document.getElementById('metrics').innerHTML=`
-  <div class="metric-card"><div class="metric-label">Total tasks</div><div class="metric-value">${total}</div><div class="metric-sub">Period 9 activities</div><div class="prog-bar"><div class="prog-fill" style="width:100%;background:#D3D1C7"></div></div></div>
-  <div class="metric-card"><div class="metric-label">Completed</div><div class="metric-value" style="color:var(--green)">${done}</div><div class="metric-sub">${pct}% of total</div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:var(--green)"></div></div></div>
-  <div class="metric-card"><div class="metric-label">In progress</div><div class="metric-value" style="color:var(--wvi-orange)">${inProg}</div><div class="metric-sub">Currently active</div><div class="prog-bar"><div class="prog-fill" style="width:${Math.round(inProg/total*100)}%;background:var(--wvi-orange)"></div></div></div>
-  <div class="metric-card"><div class="metric-label">Pending</div><div class="metric-value">${pending}</div><div class="metric-sub">Not yet started</div><div class="prog-bar"><div class="prog-fill" style="width:${Math.round(pending/total*100)}%;background:#B4B2A9"></div></div></div>
+  <div class="metric-card" data-status="All" onclick="filterByStatus('All')" title="Show all activities"><div class="metric-label">Total tasks</div><div class="metric-value">${total}</div><div class="metric-sub">Period 9 activities</div><div class="prog-bar"><div class="prog-fill" style="width:100%;background:#D3D1C7"></div></div></div>
+  <div class="metric-card" data-status="Completed" onclick="filterByStatus('Completed')" title="Show completed activities"><div class="metric-label">Completed</div><div class="metric-value" style="color:var(--green)">${done}</div><div class="metric-sub">${pct}% of total</div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:var(--green)"></div></div></div>
+  <div class="metric-card" data-status="In progress" onclick="filterByStatus('In progress')" title="Show in-progress activities"><div class="metric-label">In progress</div><div class="metric-value" style="color:var(--wvi-orange)">${inProg}</div><div class="metric-sub">Currently active</div><div class="prog-bar"><div class="prog-fill" style="width:${Math.round(inProg/total*100)}%;background:var(--wvi-orange)"></div></div></div>
+  <div class="metric-card" data-status="Not yet started" onclick="filterByStatus('Not yet started')" title="Show pending activities"><div class="metric-label">Pending</div><div class="metric-value">${pending}</div><div class="metric-sub">Not yet started</div><div class="prog-bar"><div class="prog-fill" style="width:${Math.round(pending/total*100)}%;background:#B4B2A9"></div></div></div>
 `;
 
 // Owner chart
@@ -382,7 +386,7 @@ ownerEl.innerHTML=owners.map(o=>`<button class="filter-btn${o==='All'?' active':
   o!=='All'?`<span style="width:7px;height:7px;border-radius:50%;background:${ownerColorMap[o]};display:inline-block;flex-shrink:0"></span>`:''}${o}</button>`).join('');
 
 statusEl.querySelectorAll('.filter-btn').forEach(btn=>{
-  btn.onclick=()=>{activeStatus=btn.dataset.s;statusEl.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.s===activeStatus));renderTimeline();};
+  btn.onclick=()=>{activeStatus=btn.dataset.s;statusEl.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.s===activeStatus));document.querySelectorAll('.metric-card').forEach(c=>c.classList.toggle('metric-active',activeStatus!=='All'&&c.dataset.status===activeStatus));renderTimeline();};
 });
 ownerEl.querySelectorAll('.filter-btn').forEach(btn=>{
   btn.onclick=()=>{
@@ -398,6 +402,18 @@ ownerEl.querySelectorAll('.filter-btn').forEach(btn=>{
 });
 
 const collapseState={};
+function filterByStatus(s){
+  activeStatus = (activeStatus===s && s!=='All') ? 'All' : s;
+  statusEl.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.s===activeStatus));
+  tasks.forEach(t=>{
+    const key=t.wd<0?`Pre-close (WD ${t.wd} · ${t.day})`:t.wd===0?'Periodic Tasks':`Working Day ${t.wd} · ${t.day}`;
+    collapseState[key]=false;
+  });
+  document.querySelectorAll('.metric-card').forEach(c=>c.classList.toggle('metric-active',activeStatus!=='All'&&c.dataset.status===activeStatus));
+  renderTimeline();
+  setTimeout(()=>document.querySelector('.timeline-card').scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+
 
 function filterByOwner(owner){
   activeOwner=activeOwner===owner?'All':owner;
