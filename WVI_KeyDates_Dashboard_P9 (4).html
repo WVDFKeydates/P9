@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Month-End Closing Key Dates — WVI FY2026 P9</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --wvi-orange: #E87722; --wvi-orange-light: #FDF0E6;
+    --wvi-blue: #003399; --wvi-blue-light: #E6ECFF;
+    --bg: #F7F5F2; --surface: #FFFFFF; --surface2: #F0EDE8;
+    --border: rgba(0,0,0,0.08); --border-strong: rgba(0,0,0,0.14);
+    --text-primary: #1A1814; --text-secondary: #6B6760; --text-tertiary: #9E9B96;
+    --green: #1D9E75; --green-light: #E1F5EE;
+    --amber: #B87915; --amber-light: #FDF3DC;
+    --red: #C0392B; --red-light: #FDECEA;
+    --radius: 10px; --radius-lg: 14px;
+  }
+  html { font-size: 15px; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; padding: 2rem 1.5rem 4rem; }
+  .page { max-width: 1060px; margin: 0 auto; }
+
+  .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .logo { width: 48px; height: 48px; background: var(--wvi-orange); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .logo svg { width: 26px; height: 26px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .org-name { font-size: 11px; font-weight: 500; color: var(--text-tertiary); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 3px; }
+  .page-title { font-size: 20px; font-weight: 600; color: var(--text-primary); }
+  .badge-fy { background: var(--wvi-blue-light); color: var(--wvi-blue); font-size: 11px; font-weight: 500; padding: 5px 10px; border-radius: 99px; white-space: nowrap; margin-top: 4px; display: inline-block; letter-spacing: 0.03em; }
+  .header-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .print-btn { background: var(--surface); border: 1px solid var(--border-strong); color: var(--text-secondary); font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 7px 16px; border-radius: var(--radius); cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  .print-btn:hover { background: var(--surface2); }
+
+  .countdown-banner { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--wvi-orange); border-radius: var(--radius); padding: 10px 16px; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 12px; font-size: 13px; }
+  .countdown-banner.has-overdue { border-left-color: var(--red); }
+  .countdown-text { color: var(--text-primary); font-weight: 500; }
+  .countdown-sub { color: var(--text-secondary); font-size: 12px; margin-top: 2px; }
+
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.25rem; }
+  .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem 1.25rem; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s; position: relative; }
+  .metric-card:hover { border-color: var(--border-strong); box-shadow: 0 2px 8px rgba(0,0,0,0.06); transform: translateY(-1px); }
+  .metric-card.metric-active { border-color: var(--wvi-orange); box-shadow: 0 0 0 1px var(--wvi-orange); }
+  .metric-card::after { content: '↓ View tasks'; position: absolute; bottom: 8px; right: 12px; font-size: 9px; color: var(--text-tertiary); opacity: 0; transition: opacity 0.15s; letter-spacing: 0.03em; }
+  .metric-card:hover::after { opacity: 1; }
+  .metric-label { font-size: 11px; font-weight: 500; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .metric-value { font-size: 28px; font-weight: 600; line-height: 1; margin-bottom: 8px; }
+  .metric-sub { font-size: 11px; color: var(--text-tertiary); }
+  .prog-bar { height: 4px; background: var(--border); border-radius: 99px; margin-top: 8px; }
+  .prog-fill { height: 4px; border-radius: 99px; }
+
+  .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.25rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+  .card-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); margin-bottom: 1rem; }
+  .owner-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; cursor: pointer; border-radius: 6px; padding: 2px 4px; margin-left: -4px; }
+  .owner-row:hover { background: var(--surface2); }
+  .owner-name { min-width: 110px; color: var(--text-secondary); font-family: 'DM Mono', monospace; font-size: 11px; }
+  .owner-bar-bg { flex: 1; height: 6px; background: var(--surface2); border-radius: 99px; }
+  .owner-bar { height: 6px; border-radius: 99px; }
+  .owner-count { min-width: 22px; text-align: right; font-weight: 600; font-size: 12px; color: var(--text-primary); }
+
+  .filter-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px 16px; margin-bottom: 1rem; display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
+  .filter-group { display: flex; flex-direction: column; gap: 6px; }
+  .filter-group-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); }
+  .filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-btn { font-size: 12px; font-family: 'DM Sans', sans-serif; padding: 4px 12px; border-radius: 99px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-secondary); cursor: pointer; transition: all 0.15s; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px; }
+  .filter-btn:hover { background: var(--surface2); }
+  .filter-btn.active { background: var(--wvi-orange); border-color: var(--wvi-orange); color: #fff; }
+
+  .timeline-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  .col-header { display: grid; grid-template-columns: 12px 1fr 110px 80px 80px 90px; gap: 10px; padding: 10px 16px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); background: var(--surface2); border-bottom: 1px solid var(--border); }
+  .day-group { border-bottom: 1px solid var(--border); }
+  .day-group:last-child { border-bottom: none; }
+  .day-header { display: flex; align-items: center; gap: 8px; padding: 9px 16px; background: var(--surface2); font-size: 11px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.03em; cursor: pointer; user-select: none; border-bottom: 1px solid var(--border); }
+  .day-header:hover { background: #E6E2DC; }
+  .day-header.today-header { background: #FDF0E6; border-left: 3px solid var(--wvi-orange); }
+  .today-badge { font-size: 10px; font-weight: 600; background: var(--wvi-orange); color: #fff; padding: 2px 8px; border-radius: 99px; }
+  .day-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .chevron { margin-left: auto; color: var(--text-tertiary); font-size: 11px; transition: transform 0.2s; }
+  .chevron.open { transform: rotate(180deg); }
+  .day-body.collapsed { display: none; }
+  .task-row { display: grid; grid-template-columns: 12px 1fr 110px 80px 80px 90px; gap: 10px; align-items: start; padding: 8px 16px; border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  .task-row:last-child { border-bottom: none; }
+  .task-row:hover { background: #FAFAF8; }
+  .task-row.overdue-row { background: #FFF8F7; }
+  .task-row.overdue-row:hover { background: #FDECEA; }
+  .task-row.key-task { border-left: 3px solid var(--wvi-orange); background: #FFFAF6; }
+  .task-row.key-task:hover { background: var(--wvi-orange-light); }
+  .task-row.key-task .task-name { font-weight: 600; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .dot-done { background: var(--green); }
+  .dot-prog { background: var(--wvi-orange); }
+  .dot-pend { background: #D3D1C7; }
+  .dot-overdue { background: var(--red); }
+  .dot-holiday { background: #6366F1; }
+  .task-name { font-size: 12.5px; color: var(--text-primary); line-height: 1.4; }
+  .task-comment { font-size: 11px; color: var(--text-tertiary); margin-top: 3px; font-style: italic; line-height: 1.35; }
+  .task-owner { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text-secondary); text-align: right; padding-top: 2px; }
+  .task-due { font-size: 11px; color: var(--text-secondary); text-align: right; padding-top: 2px; }
+  .task-due.overdue-date { color: var(--red); font-weight: 600; }
+  .task-cut { font-size: 11px; color: var(--text-tertiary); text-align: right; padding-top: 2px; }
+  .badge { font-size: 10px; font-weight: 500; padding: 3px 9px; border-radius: 99px; text-align: center; white-space: nowrap; }
+  .badge-done { background: var(--green-light); color: #0A5C44; }
+  .badge-prog { background: var(--amber-light); color: var(--amber); }
+  .badge-pend { background: var(--surface2); color: var(--text-tertiary); }
+  .badge-overdue { background: var(--red-light); color: var(--red); }
+  .badge-holiday { background: #EEF2FF; color: #3730A3; }
+  .task-row.holiday-row { background: #F5F7FF; }
+  .task-row.holiday-row:hover { background: #EEF2FF; }
+  .empty-state { padding: 2rem; text-align: center; color: var(--text-tertiary); font-size: 13px; }
+  .footer { margin-top: 2.5rem; text-align: center; font-size: 11px; color: var(--text-tertiary); }
+
+  @media (max-width: 700px) {
+    .metrics { grid-template-columns: 1fr 1fr; }
+    .charts-row { grid-template-columns: 1fr; }
+    .col-header, .task-row { grid-template-columns: 12px 1fr 80px; }
+    .task-owner, .task-due, .task-cut { display: none; }
+  }
+  @media print {
+    body { background: #fff; padding: 1rem; }
+    .print-btn, .filter-bar { display: none; }
+    .day-body.collapsed { display: block !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="page-header">
+    <div class="header-left">
+      <div class="logo">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14" stroke-width="2.5"/><line x1="12" y1="14" x2="12" y2="14" stroke-width="2.5"/><line x1="16" y1="14" x2="16" y2="14" stroke-width="2.5"/><line x1="8" y1="18" x2="8" y2="18" stroke-width="2.5"/><line x1="12" y1="18" x2="12" y2="18" stroke-width="2.5"/></svg>
+      </div>
+      <div>
+        <div class="org-name">World Vision Development Foundation Inc</div>
+        <div class="page-title">Month-End Closing Key Dates</div>
+        <span class="badge-fy">FY2026 · Period 9 · PHLO</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="print-btn" onclick="expandAll();window.print()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print / Save PDF
+      </button>
+      <a href="https://wvdfkeydates.github.io/P8/" target="_blank" rel="noopener" style="background:var(--wvi-orange);color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:7px 16px;border-radius:var(--radius);display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Period 8
+      </a>
+      <a href="https://wvi365.sharepoint.com/sites/PHLO-FINANCE18/SitePages/WVDF-MONTH-END-KEYDATES.aspx" target="_blank" rel="noopener" style="background:var(--wvi-blue);color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:7px 16px;border-radius:var(--radius);display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Keydates Website
+      </a>
+    </div>
+  </header>
+
+  <!-- Video -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:1.25rem;overflow:hidden;">
+    <div onclick="toggleVideo()" style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <div style="display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-tertiary);">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        Month-End Close Reminders
+        <span style="background:var(--wvi-orange-light);color:var(--wvi-orange);font-size:10px;padding:2px 8px;border-radius:99px;font-weight:500;text-transform:none;">Video</span>
+        <span style="font-size:11px;font-weight:400;color:var(--wvi-orange);text-transform:none;letter-spacing:0;font-style:italic;">👆 Click to watch before starting your tasks!</span>
+      </div>
+      <span id="video-chevron" style="font-size:11px;color:var(--text-tertiary);transition:transform 0.2s;">▾</span>
+    </div>
+    <div id="video-body" style="display:none;padding:0 1.25rem 1.25rem;">
+      <div style="position:relative;width:100%;padding-bottom:56.25%;border-radius:var(--radius);overflow:hidden;background:#000;">
+        <iframe src="https://wvi365.sharepoint.com/sites/PHLO-FINANCE18/_layouts/15/embed.aspx?UniqueId=ffef1a97-28b5-4f4c-9e57-1587e414c641&embed=%7B%22ust%22%3Atrue%2C%22hv%22%3A%22CopyEmbedCode%22%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create"
+          style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" scrolling="no" allowfullscreen title="ME reminders.mp4"></iframe>
+      </div>
+      <p style="font-size:11px;color:var(--text-tertiary);margin-top:8px;">
+        Can't see the video? <a href="https://wvi365.sharepoint.com/:v:/r/sites/PHLO-FINANCE18/Shared%20Documents/ME%20Reports/Month%20End%20Close%20Reminders.mp4?csf=1&web=1&e=O9uqhk" target="_blank" rel="noopener" style="color:var(--wvi-orange);text-decoration:none;font-weight:500;">Open directly in SharePoint →</a>
+      </p>
+    </div>
+  </div>
+
+  <div id="countdown-banner"></div>
+  <div class="metrics" id="metrics"></div>
+
+  <div class="charts-row">
+    <div class="card">
+      <div class="card-title">Tasks by owner</div>
+      <div id="owner-list"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Completion by working day</div>
+      <div style="position:relative;height:200px;">
+        <canvas id="dayChart" role="img" aria-label="Stacked bar chart showing task completion by working day"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-group">
+      <div class="filter-group-label">Status</div>
+      <div class="filter-pills" id="status-filters"></div>
+    </div>
+    <div class="filter-group">
+      <div class="filter-group-label">Owner</div>
+      <div class="filter-pills" id="owner-filters"></div>
+    </div>
+  </div>
+
+  <div class="timeline-card">
+    <div class="col-header">
+      <span></span><span>Activity</span><span style="text-align:right">Owner</span><span style="text-align:right">Due Date</span><span style="text-align:right">Cut-off</span><span style="text-align:right">Status</span>
+    </div>
+    <div id="timeline"></div>
+  </div>
+
+  <div class="footer">World Vision Development Foundation Inc · FY2026 Period 9 · Jun–Jul 2026</div>
+</div>
+
+<script>
+const tasks = [
+  {status:'Completed',name:'Last day to send billing invoice for bank debit',owner:'All Finance',wd:-4,due:'Jun 25',dueDate:'2026-06-25',day:'Thursday',cut:'3PM',comment:''},
+  {status:'Completed',name:'Pre-run of Aging Report',owner:'SSC',wd:-3,due:'Jun 26',dueDate:'2026-06-26',day:'Friday',cut:'5PM',comment:''},
+  {status:'Completed',name:'Transaction Listing for Critical Grants / Priority Collection',owner:'All Finance',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
+  {status:'Completed',name:'SA related Payroll Entries',owner:'Payroll',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Charging Confirmation: Direct Charges (excl. EU/BMZ)',owner:'All Finance',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Charging Confirmation: Payroll (excl. EU/BMZ)',owner:'All Finance',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Charging Confirmation: Mobile Allowance',owner:'All Finance',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Charging Confirmation: Insurance (excl. EU/BMZ)',owner:'All Finance',wd:-2,due:'Jun 29',dueDate:'2026-06-29',day:'Monday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Recording of Conversion Rate (FT) & GC Funding',owner:'GL',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'11AM',comment:''},
+  {status:'Completed',name:'Review accuracy and completeness of Codings & Revaluation',owner:'GL',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'12NN',comment:''},
+  {status:'Completed',name:'Exchange Rate Calculation',owner:'SSC',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'1PM',comment:''},
+  {status:'Completed',name:'Inform final rate to NO; NO to confirm',owner:'SSC',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'2PM',comment:''},
+  {status:'Completed',name:'Update Exchange Rate in SunSystems',owner:'SSC',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'3PM',comment:''},
+  {status:'Completed',name:'Ledger Revaluation (LER)',owner:'SSC',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'4PM',comment:''},
+  {status:'Completed',name:'Start Account Allocation',owner:'SSC',wd:-1,due:'Jun 30',dueDate:'2026-06-30',day:'Tuesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Invoice review for Koica Project',owner:'All Finance',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Extract grant profile from Horizon',owner:'RD Finance',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Confirmation of grant profile from Program Finance',owner:'Program Finance',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Budget entries (Ledger K/J/B/G) — submit approved entries',owner:'All Finance',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'Budget Upload',comment:''},
+  {status:'Completed',name:'Check split billing; send to NO for confirmation',owner:'SSC',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'10AM',comment:''},
+  {status:'Completed',name:'Send initial accrual entry to PHLO for review',owner:'SSC',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'12NN',comment:''},
+  {status:'Completed',name:'NO to confirm split billing correct codings',owner:'All Finance',wd:1,due:'Jul 1',dueDate:'2026-07-01',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Charging Confirmation: Payroll (EU/BMZ only)',owner:'All Finance',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'10AM',comment:''},
+  {status:'Completed',name:'Charging Confirmation: Direct Charges (EU/BMZ only)',owner:'All Finance',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'10AM',comment:''},
+  {status:'Completed',name:'Charging Confirmation: Insurance (EU/BMZ only)',owner:'All Finance',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'10AM',comment:''},
+  {status:'Completed',name:'Accrual Confirmation from PHLO',owner:'All Finance',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'11AM',comment:''},
+  {status:'Completed',name:'Send accrual entry with integration error',owner:'SSC',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'4PM',comment:''},
+  {status:'Completed',name:'Accrual Confirmation and integration error correction',owner:'All Finance',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Check & Clear 59098 Account (before DPC CAL)',owner:'SSC',wd:2,due:'Jul 2',dueDate:'2026-07-02',day:'Thursday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Posting of Accrual Entry',owner:'SSC',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'11AM',comment:''},
+  {status:'Completed',name:'Update list of Excluded Projects for DPC CAL on MS Teams',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'12NN',comment:''},
+  {status:'Completed',name:'Monthly Budget Accounts Recon (LedB vs Actual vs PBAS)',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Occupancy',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Building Loan',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Settlement Advice',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Life Insurance',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Health Insurance',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'National Travel Insurance',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Payroll Entries',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Direct Charges',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'N2101 Support Cost Reclass to Various Projects Clearing',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'59501 Account For Clearing',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Other After Reval Entries',owner:'All Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'CVT Codes review — DPC CAL expenses',owner:'GL',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Clean-up of TP Eval Flow through / IPF Clean Up',owner:'Program Finance',wd:3,due:'Jul 3',dueDate:'2026-07-03',day:'Friday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Before DPC CAL Adjustments (R2R)',owner:'SSC',wd:4,due:'Jul 6',dueDate:'2026-07-06',day:'Monday',cut:'12NN',comment:''},
+  {status:'Completed',name:'Send Control Figure to WV Central for DPC CAL Run',owner:'GL',wd:4,due:'Jul 6',dueDate:'2026-07-06',day:'Monday',cut:'1PM',comment:''},
+  {status:'Completed',name:'DPC CAL Run',owner:'FRSC',wd:4,due:'Jul 6',dueDate:'2026-07-06',day:'Monday',cut:'2PM',comment:''},
+  {status:'Completed',name:'CAL Reclass & Support Cost (before CAL)',owner:'All Finance',wd:5,due:'Jul 7',dueDate:'2026-07-07',day:'Tuesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Final Budget Entries (Ledger B/G/K/J)',owner:'All Finance',wd:5,due:'Jul 7',dueDate:'2026-07-07',day:'Tuesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Send Control Figure to WV Central for CAL Run',owner:'GL',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'10AM',comment:''},
+  {status:'Completed',name:'Cost Allocation (CAL) Run',owner:'FRSC',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'5PM',comment:''},
+  {status:'Completed',name:'RD Entries (1xxx–3xxx & 5xxx related accounts)',owner:'All Finance',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Last day of Non-CAL related entries (NFA, Balance Sheet)',owner:'All Finance',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Last day of Account Allocation',owner:'SSC',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'Reclass of Cash Voucher Transfer Income',owner:'All Finance',wd:6,due:'Jul 8',dueDate:'2026-07-08',day:'Wednesday',cut:'6PM',comment:''},
+  {status:'Completed',name:'SCR Entries ONLY (after CAL)',owner:'All Finance',wd:7,due:'Jul 9',dueDate:'2026-07-09',day:'Thursday',cut:'6PM',comment:''},
+  {status:'In progress',name:'Generate Financial Reports & Send to NO',owner:'SSC',wd:8,due:'Jul 10',dueDate:'2026-07-10',day:'Friday',cut:'1PM',comment:''},
+  {status:'In progress',name:'Review Financial Reports by NO',owner:'GL',wd:8,due:'Jul 10',dueDate:'2026-07-10',day:'Friday',cut:'4PM',comment:''},
+  {status:'In progress',name:'Posting Reports to FFR Database',owner:'SSC',wd:8,due:'Jul 10',dueDate:'2026-07-10',day:'Friday',cut:'5PM',comment:''},
+  {status:'Not yet started',name:'Power BI Financial Report',owner:'SFO/FMs',wd:9,due:'Jul 14',dueDate:'2026-07-14',day:'Monday',cut:'4PM',comment:''},
+  {status:'Not yet started',name:'PNSG Health Tracker',owner:'SFO/FMs',wd:9,due:'Jul 14',dueDate:'2026-07-14',day:'Monday',cut:'5PM',comment:''},
+  {status:'Not yet started',name:'Request CCLR re-run',owner:'SFO/FMs',wd:9,due:'Jul 14',dueDate:'2026-07-14',day:'Monday',cut:'5PM',comment:''},
+  {status:'Not yet started',name:'Operations Financial Highlights & Discussions',owner:'SFO/FMs',wd:9,due:'Jul 14',dueDate:'2026-07-14',day:'Monday',cut:'6PM',comment:''},
+  {status:'Not yet started',name:'LDR Compliance report email to OMs & Directors',owner:'Payroll',wd:9,due:'Jul 14',dueDate:'2026-07-14',day:'Monday',cut:'6PM',comment:''},
+  {status:'Not yet started',name:'Finalization of Cover Memo',owner:'SFO/FMs',wd:11,due:'Jul 16',dueDate:'2026-07-16',day:'Wednesday',cut:'3PM',comment:''},
+  {status:'Not yet started',name:'FFR Discussion with ND',owner:'FD & ND',wd:12,due:'Jul 17',dueDate:'2026-07-17',day:'Thursday',cut:'11AM',comment:''},
+  {status:'Not yet started',name:'Sending of Monthly Account Listing Ledger A & E',owner:'GL',wd:13,due:'Jul 18',dueDate:'2026-07-18',day:'Friday',cut:'6PM',comment:''},
+  {status:'Not yet started',name:'Fixed Asset Recon',owner:'GL',wd:16,due:'Jul 23',dueDate:'2026-07-23',day:'Wednesday',cut:'Quarterly',comment:''},
+  {status:'Not yet started',name:'Combined CoreProj Logframe Report',owner:'SSC',wd:0,due:'—',dueDate:'',day:'—',cut:'Semi-Annually',comment:''},
+  {status:'Not yet started',name:'ICSAT',owner:'GL',wd:0,due:'—',dueDate:'',day:'—',cut:'Every 2 Yrs',comment:''},
+  {status:'Not yet started',name:'Send Outstanding 200 Account Listing',owner:'GL',wd:19,due:'Jul 24',dueDate:'2026-07-24',day:'Thursday',cut:'5PM',comment:''},
+  {status:'Not yet started',name:'Send updated 170-172 Account Monitoring Summary',owner:'GL',wd:19,due:'Jul 24',dueDate:'2026-07-24',day:'Thursday',cut:'5PM',comment:''},
+  {status:'Not yet started',name:'Send 230 Accrual Balance to date to NO Finance',owner:'GL',wd:19,due:'Jul 24',dueDate:'2026-07-24',day:'Thursday',cut:'5PM',comment:''},
+  {status:'Not yet started',name:'Preparation & Posting Statutory Entries',owner:'GL',wd:19,due:'Jul 24',dueDate:'2026-07-24',day:'Thursday',cut:'5PM',comment:''},
+];
+
+const today = new Date(); today.setHours(0,0,0,0);
+const todayStr = today.toISOString().slice(0,10);
+
+function toggleVideo(){
+  const body=document.getElementById('video-body');
+  const chevron=document.getElementById('video-chevron');
+  const isHidden=body.style.display==='none';
+  body.style.display=isHidden?'block':'none';
+  chevron.style.transform=isHidden?'rotate(180deg)':'rotate(0deg)';
+}
+
+function isOverdue(t){
+  if(t.status==='Completed'||t.status==='holiday') return false;
+  if(!t.dueDate) return false;
+  const d=new Date(t.dueDate); d.setHours(0,0,0,0);
+  return d < today;
+}
+
+// Countdown banner
+const overdueTasks=tasks.filter(isOverdue);
+const nextPending=tasks.find(t=>t.status!=='Completed'&&t.status!=='holiday'&&t.dueDate&&new Date(t.dueDate)>=today);
+const banner=document.getElementById('countdown-banner');
+if(overdueTasks.length){
+  const np=nextPending;
+  const npText=np?` · Next: ${np.due} — ${np.name}`:'';
+  banner.innerHTML=`<div class="countdown-banner has-overdue">
+    <span style="font-size:18px;">⚠️</span>
+    <div><div class="countdown-text">${overdueTasks.length} overdue task${overdueTasks.length>1?'s':''} need attention</div>
+    <div class="countdown-sub">${overdueTasks.map(t=>t.name).slice(0,2).join(' · ')}${overdueTasks.length>2?' · and '+(overdueTasks.length-2)+' more':''}${npText}</div></div>
+  </div>`;
+} else if(nextPending){
+  const nd=new Date(nextPending.dueDate); nd.setHours(0,0,0,0);
+  const diff=Math.round((nd-today)/(1000*60*60*24));
+  const label=diff===0?'today':diff===1?'tomorrow':'in '+diff+' days';
+  banner.innerHTML=`<div class="countdown-banner">
+    <span style="font-size:18px;">🗓️</span>
+    <div><div class="countdown-text">Next deadline: ${nextPending.due} — ${label}</div>
+    <div class="countdown-sub">${nextPending.name} · ${nextPending.owner}</div></div>
+  </div>`;
+}
+
+// Metrics
+const total=tasks.filter(t=>t.status!=='holiday').length,done=tasks.filter(t=>t.status==='Completed').length;
+const inProg=tasks.filter(t=>t.status==='In progress').length,pending=tasks.filter(t=>t.status==='Not yet started').length;
+const pct=Math.round(done/total*100);
+document.getElementById('metrics').innerHTML=`
+  <div class="metric-card" data-status="All" onclick="filterByStatus('All')" title="Show all activities"><div class="metric-label">Total tasks</div><div class="metric-value">${total}</div><div class="metric-sub">Period 9 activities</div><div class="prog-bar"><div class="prog-fill" style="width:100%;background:#D3D1C7"></div></div></div>
+  <div class="metric-card" data-status="Completed" onclick="filterByStatus('Completed')" title="Show completed activities"><div class="metric-label">Completed</div><div class="metric-value" style="color:var(--green)">${done}</div><div class="metric-sub">${pct}% of total</div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:var(--green)"></div></div></div>
+  <div class="metric-card" data-status="In progress" onclick="filterByStatus('In progress')" title="Show in-progress activities"><div class="metric-label">In progress</div><div class="metric-value" style="color:var(--wvi-orange)">${inProg}</div><div class="metric-sub">Currently active</div><div class="prog-bar"><div class="prog-fill" style="width:${Math.round(inProg/total*100)}%;background:var(--wvi-orange)"></div></div></div>
+  <div class="metric-card" data-status="Not yet started" onclick="filterByStatus('Not yet started')" title="Show pending activities"><div class="metric-label">Pending</div><div class="metric-value">${pending}</div><div class="metric-sub">Not yet started</div><div class="prog-bar"><div class="prog-fill" style="width:${Math.round(pending/total*100)}%;background:#B4B2A9"></div></div></div>
+`;
+
+// Owner chart
+const ownerCounts={};
+tasks.filter(t=>t.status!=='holiday').forEach(t=>{ownerCounts[t.owner]=(ownerCounts[t.owner]||0)+1;});
+const sortedOwners=Object.entries(ownerCounts).sort((a,b)=>b[1]-a[1]);
+const maxOwner=sortedOwners[0][1];
+const barColors=['#E87722','#003399','#1D9E75','#5DCAA5','#D85A30','#378ADD','#BA7517','#639922','#8B4FA6'];
+const ownerColorMap={};
+sortedOwners.forEach(([o],i)=>{ownerColorMap[o]=barColors[i%barColors.length];});
+document.getElementById('owner-list').innerHTML=sortedOwners.map(([o,c],i)=>`
+  <div class="owner-row" onclick="filterByOwner('${o}')" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+    <span class="owner-name">${o}</span>
+    <div class="owner-bar-bg"><div class="owner-bar" style="width:${Math.round(c/maxOwner*100)}%;background:${barColors[i%barColors.length]}"></div></div>
+    <span class="owner-count">${c}</span>
+  </div>`).join('');
+
+// Day chart
+const wdGroups={};
+tasks.filter(t=>t.wd!==0&&t.status!=='holiday').forEach(t=>{if(!isNaN(t.wd)){wdGroups[t.wd]=wdGroups[t.wd]||{done:0,total:0};wdGroups[t.wd].total++;if(t.status==='Completed')wdGroups[t.wd].done++;}});
+const wdKeys=Object.keys(wdGroups).map(Number).sort((a,b)=>a-b);
+new Chart(document.getElementById('dayChart'),{
+  type:'bar',
+  data:{labels:wdKeys.map(d=>`WD ${d}`),datasets:[
+    {label:'Completed',data:wdKeys.map(d=>wdGroups[d].done),backgroundColor:'#1D9E75'},
+    {label:'Remaining',data:wdKeys.map(d=>wdGroups[d].total-wdGroups[d].done),backgroundColor:'#E8E5DF'}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+    scales:{x:{stacked:true,ticks:{font:{size:9.5},color:'#9E9B96'},grid:{display:false}},
+            y:{stacked:true,ticks:{font:{size:10},color:'#9E9B96'},grid:{color:'rgba(0,0,0,0.05)'}}}}
+});
+
+// Filters
+let activeStatus='All',activeOwner='All';
+const statuses=['All','Completed','In progress','Not yet started'];
+const owners=['All',...sortedOwners.map(([o])=>o)];
+const statusEl=document.getElementById('status-filters');
+const ownerEl=document.getElementById('owner-filters');
+statusEl.innerHTML=statuses.map(s=>`<button class="filter-btn${s==='All'?' active':''}" data-s="${s}">${s}</button>`).join('');
+ownerEl.innerHTML=owners.map(o=>`<button class="filter-btn${o==='All'?' active':''}" data-o="${o}">${
+  o!=='All'?`<span style="width:7px;height:7px;border-radius:50%;background:${ownerColorMap[o]};display:inline-block;flex-shrink:0"></span>`:''}${o}</button>`).join('');
+
+statusEl.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.onclick=()=>{activeStatus=btn.dataset.s;statusEl.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.s===activeStatus));document.querySelectorAll('.metric-card').forEach(c=>c.classList.toggle('metric-active',activeStatus!=='All'&&c.dataset.status===activeStatus));renderTimeline();};
+});
+ownerEl.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    activeOwner=btn.dataset.o;
+    ownerEl.querySelectorAll('.filter-btn').forEach(b=>{
+      const on=b.dataset.o===activeOwner;
+      b.classList.toggle('active',on);
+      if(on&&b.dataset.o!=='All') b.style.cssText=`background:${ownerColorMap[b.dataset.o]};border-color:${ownerColorMap[b.dataset.o]};color:#fff`;
+      else if(b.dataset.o!=='All') b.style.cssText='';
+    });
+    renderTimeline();
+  };
+});
+
+const collapseState={};
+function filterByStatus(s){
+  activeStatus = (activeStatus===s && s!=='All') ? 'All' : s;
+  statusEl.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.s===activeStatus));
+  tasks.forEach(t=>{
+    const key=t.wd<0?`Pre-close (WD ${t.wd} · ${t.day})`:t.wd===0?'Periodic Tasks':`Working Day ${t.wd} · ${t.day}`;
+    collapseState[key]=false;
+  });
+  document.querySelectorAll('.metric-card').forEach(c=>c.classList.toggle('metric-active',activeStatus!=='All'&&c.dataset.status===activeStatus));
+  renderTimeline();
+  setTimeout(()=>document.querySelector('.timeline-card').scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+
+
+function filterByOwner(owner){
+  activeOwner=activeOwner===owner?'All':owner;
+  ownerEl.querySelectorAll('.filter-btn').forEach(b=>{
+    const on=b.dataset.o===activeOwner;
+    b.classList.toggle('active',on);
+    if(on&&b.dataset.o!=='All') b.style.cssText=`background:${ownerColorMap[b.dataset.o]};border-color:${ownerColorMap[b.dataset.o]};color:#fff`;
+    else if(b.dataset.o!=='All') b.style.cssText='';
+  });
+  renderTimeline();
+  document.querySelector('.filter-bar').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function expandAll(){Object.keys(collapseState).forEach(k=>{collapseState[k]=false;});}
+
+const keyTasks=['DPC CAL Run','Cost Allocation (CAL) Run','SCR Entries ONLY (after CAL)','Posting Reports to FFR Database','Finalization of Cover Memo'];
+
+function renderTimeline(){
+  let filtered=tasks;
+  if(activeStatus!=='All') filtered=filtered.filter(t=>t.status===activeStatus);
+  if(activeOwner!=='All') filtered=filtered.filter(t=>t.owner===activeOwner);
+  const groups={},groupMeta={};
+  filtered.forEach(t=>{
+    const key=t.wd<0?`Pre-close (WD ${t.wd} · ${t.day})`:t.wd===0?'Periodic Tasks':`Working Day ${t.wd} · ${t.day}`;
+    if(!groups[key]){groups[key]=[];groupMeta[key]=t.dueDate||'';}
+    groups[key].push(t);
+  });
+  const tl=document.getElementById('timeline');
+  tl.innerHTML='';
+  if(!filtered.length){tl.innerHTML='<div class="empty-state">No tasks match this filter.</div>';return;}
+  Object.entries(groups).forEach(([g,ts])=>{
+    const allDone=ts.every(t=>t.status==='Completed'||t.status==='holiday');
+    const anyProg=ts.some(t=>t.status==='In progress');
+    const anyOverdue=ts.some(t=>isOverdue(t));
+    const dotCls=anyOverdue?'dot-overdue':allDone?'dot-done':anyProg?'dot-prog':'dot-pend';
+    const isToday=groupMeta[g]===todayStr;
+    if(collapseState[g]===undefined) collapseState[g]=allDone&&!isToday;
+    const collapsed=collapseState[g];
+    const div=document.createElement('div');
+    div.className='day-group';
+    const hCls='day-header'+(isToday?' today-header':'');
+    const todayBadge=isToday?'<span class="today-badge">Today</span>':'';
+    div.innerHTML=`<div class="${hCls}">
+        <span class="day-dot ${dotCls}"></span>${g}${todayBadge}
+        <span class="chevron${collapsed?'':' open'}">▾</span>
+      </div>
+      <div class="day-body${collapsed?' collapsed':''}">` +
+      ts.map(t=>{
+        const od=isOverdue(t);
+        const isHoliday=t.status==='holiday';
+        const isKey=keyTasks.includes(t.name);
+        const bCls=isHoliday?'badge-holiday':od?'badge-overdue':t.status==='Completed'?'badge-done':t.status==='In progress'?'badge-prog':'badge-pend';
+        const label=isHoliday?'Holiday':od?'Overdue':t.status==='Not yet started'?'Pending':t.status;
+        const dCls=isHoliday?'dot-holiday':od?'dot-overdue':t.status==='Completed'?'dot-done':t.status==='In progress'?'dot-prog':'dot-pend';
+        const dueCls='task-due'+(od&&!isHoliday?' overdue-date':'');
+        const rowCls='task-row'+(isHoliday?' holiday-row':od?' overdue-row':isKey?' key-task':'');
+        const commentHtml=t.comment?`<div class="task-comment">💬 ${t.comment}</div>`:'';
+        return `<div class="${rowCls}">
+          <span class="status-dot ${dCls}"></span>
+          <span class="task-name">${t.name}${commentHtml}</span>
+          <span class="task-owner">${t.owner}</span>
+          <span class="${dueCls}">${t.due||'—'}</span>
+          <span class="task-cut">${t.cut}</span>
+          <span class="badge ${bCls}">${label}</span>
+        </div>`;
+      }).join('')+'</div>';
+    tl.appendChild(div);
+    div.querySelector('.day-header').addEventListener('click',()=>{
+      collapseState[g]=!collapseState[g];
+      div.querySelector('.day-body').classList.toggle('collapsed',collapseState[g]);
+      div.querySelector('.chevron').classList.toggle('open',!collapseState[g]);
+    });
+  });
+}
+renderTimeline();
+</script>
+</body>
+</html>
